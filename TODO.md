@@ -52,51 +52,51 @@
 
 ## Phase 2: Core Data Ingestion (31 APIs)
 ### Environment & Climate APIs
-- [ ] USGS Earthquake API integration
-- [ ] Open-Meteo Weather API integration
-- [ ] OpenAQ Air Quality API integration
-- [ ] NASA FIRMS Fire API integration
-- [ ] NIFC Wildfire Perimeters integration
-- [ ] GDACS Disaster Alerts integration
-- [ ] NOAA Storm Prediction Center integration
-- [ ] NOAA Space Weather API integration
+- [x] USGS Earthquake API integration
+- [x] Open-Meteo Weather API integration
+- [x] OpenAQ Air Quality API integration
+- [x] NASA FIRMS Fire API integration
+- [x] NIFC Wildfire Perimeters integration
+- [x] GDACS Disaster Alerts integration
+- [x] NOAA Storm Prediction Center integration
+- [x] NOAA Space Weather API integration
 
 ### Movement APIs
-- [ ] OpenSky Network Flight API integration
-- [ ] AIS Vessel Tracking integration
-- [ ] Transitland Public Transit integration
-- [ ] TomTom Traffic API integration
-- [ ] N2YO Satellite Tracking integration
-- [ ] Open Notify ISS Position integration
+- [x] OpenSky Network Flight API integration
+- [x] AIS Vessel Tracking integration
+- [x] Transitland Public Transit integration
+- [x] TomTom Traffic API integration
+- [x] N2YO Satellite Tracking integration
+- [x] Open Notify ISS Position integration
 
 ### Economics APIs
-- [ ] CoinGecko Crypto API integration
-- [ ] FRED Economic Data integration
-- [ ] Alpha Vantage Market Data integration
-- [ ] ExchangeRate-API Currency integration
-- [ ] World Bank Open Data integration
-- [ ] Commodity Price Feeds integration
+- [x] CoinGecko Crypto API integration
+- [x] FRED Economic Data integration
+- [x] Alpha Vantage Market Data integration
+- [x] ExchangeRate-API Currency integration
+- [x] World Bank Open Data integration
+- [x] Commodity Price Feeds integration
 
 ### Humanitarian & Geopolitical APIs
-- [ ] GDELT GEO API integration
-- [ ] GDELT DOC 2.0 API integration
-- [ ] ReliefWeb API integration
-- [ ] ACLED Conflict Data integration
+- [x] GDELT GEO API integration
+- [x] GDELT DOC 2.0 API integration
+- [x] ReliefWeb API integration
+- [x] ACLED Conflict Data integration
 
 ### Digital World APIs
-- [ ] Wikimedia EventStreams integration
-- [ ] GitHub Events API integration
-- [ ] Cloudflare Radar API integration
-- [ ] Hacker News API integration
+- [x] Wikimedia EventStreams integration
+- [x] GitHub Events API integration
+- [x] Cloudflare Radar API integration
+- [x] Hacker News API integration
 
 ### Geocoding
-- [ ] Nominatim/OpenStreetMap integration
+- [x] Nominatim/OpenStreetMap integration
 
 ### Data Normalization
-- [ ] Universal severity scoring (0-1)
-- [ ] Common event schema
-- [ ] Geospatial enrichment
-- [ ] Time-series storage
+- [x] Universal severity scoring (0-1)
+- [x] Common event schema
+- [x] Geospatial enrichment
+- [x] Time-series storage
 
 ---
 
