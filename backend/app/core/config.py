@@ -1,72 +1,134 @@
-import os
-from typing import List
-from pydantic_settings import BaseSettings
 from functools import lru_cache
+from typing import Optional
+from pydantic_settings import BaseSettings
+from pydantic import Field
 
 
 class Settings(BaseSettings):
+    # App
     APP_NAME: str = "TerraSignal"
-    APP_VERSION: str = "0.1.0"
+    APP_VERSION: str = "1.0.0"
+    ENVIRONMENT: str = "development"
+    LOG_LEVEL: str = "DEBUG"
     DEBUG: bool = True
-    
-    API_V1_STR: str = "/api/v1"
-    
-    MONGODB_URL: str = "mongodb://localhost:27017"
-    MONGODB_DB_NAME: str = "terrasignal"
-    
-    SECRET_KEY: str = "your-secret-key-change-in-production"
+
+    # Database
+    POSTGRES_DB: str = "terrasignal"
+    POSTGRES_USER: str = "terrasignal"
+    POSTGRES_PASSWORD: str = "terrasignal"
+    POSTGRES_HOST: str = "localhost"
+    POSTGRES_PORT: int = 5432
+    DATABASE_URL: str = "postgresql+asyncpg://terrasignal:terrasignal@localhost:5432/terrasignal"
+
+    # Redis
+    REDIS_URL: str = "redis://localhost:6379/0"
+
+    # Security
+    SECRET_KEY: str = "your-super-secret-key-change-in-production-min-32-chars"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
-    
-    CORS_ORIGINS: List[str] = ["http://localhost:5173", "http://localhost:3000"]
-    
-    USGS_EARTHQUAKE_URL: str = "https://earthquake.usgs.gov/fdsnws/event/1/query"
-    OPEN_METEO_URL: str = "https://api.open-meteo.com/v1"
-    OPENAQ_URL: str = "https://api.openaq.org/v2"
-    NASA_FIRMS_URL: str = "https://firms.modaps.eosdis.nasa.gov/api"
-    GDACS_URL: str = "https://www.gdacs.org/gdacsapi/api"
-    NOAA_SPC_URL: str = "https://www.spc.noaa.gov/products/outlook"
-    NOAA_SWPC_URL: str = "https://services.swpc.noaa.gov/json"
-    OPENSKY_URL: str = "https://opensky-network.org/api"
-    AIS_URL: str = "https://api.ais.52north.org"
-    TRANSITLAND_URL: str = "https://transit.land/api"
-    TOMTOM_URL: str = "https://api.tomtom.com/traffic/services/4"
-    N2YO_URL: str = "https://api.n2yo.com/rest/v1/satellite"
-    OPEN_NOTIFY_URL: str = "http://api.open-notify.org"
-    COINGECKO_URL: str = "https://api.coingecko.com/api/v3"
-    FRED_URL: str = "https://api.stlouisfed.org/fred"
-    ALPHA_VANTAGE_URL: str = "https://www.alphavantage.co/query"
-    EXCHANGE_RATE_URL: str = "https://api.exchangerate-api.com/v4"
-    WORLD_BANK_URL: str = "https://api.worldbank.org/v2"
-    COMMODITY_URL: str = "https://api.commodityprices.com/v1"
-    GDELT_GEO_URL: str = "https://api.gdeltproject.org/api/v2/geo"
-    GDELT_DOC_URL: str = "https://api.gdeltproject.org/api/v2/doc"
-    RELIEFWEB_URL: str = "https://api.reliefweb.int/v1"
-    ACLED_URL: str = "https://api.acleddata.com"
-    WIKIMEDIA_EVENTSTREAM_URL: str = "https://stream.wikimedia.org/v2/stream"
-    GITHUB_EVENTS_URL: str = "https://api.github.com/events"
-    CLOUDFLARE_RADAR_URL: str = "https://radar.cloudflare.com/api"
-    HACKER_NEWS_URL: str = "https://hacker-news.firebaseio.com/v0"
-    NOMINATIM_URL: str = "https://nominatim.openstreetmap.org"
-    
-    CESIUM_ION_TOKEN: str = ""
-    
-    VAPID_PUBLIC_KEY: str = ""
-    VAPID_PRIVATE_KEY: str = ""
-    VAPID_CLAIMS_EMAIL: str = "alerts@terrasignal.io"
-    
-    WORKER_CONCURRENCY: int = 4
-    FETCH_INTERVAL_SECONDS: int = 300
-    
+
+    # API Keys - Environment & Climate
+    USGS_API_KEY: str = ""
+    OPENWEATHER_API_KEY: str = ""
+    OPENAQ_API_KEY: str = ""
+    NASA_FIRMS_API_KEY: str = ""
+    NOAA_API_KEY: str = ""
+
+    # API Keys - Movement
+    OPENSKY_CLIENT_ID: str = ""
+    OPENSKY_CLIENT_SECRET: str = ""
+    AIS_API_KEY: str = ""
+    TRANSITLAND_API_KEY: str = ""
+    TOMTOM_API_KEY: str = ""
+
+    # API Keys - Space
+    N2YO_API_KEY: str = ""
+
+    # API Keys - Economics
+    COINGECKO_API_KEY: str = ""
+    FRED_API_KEY: str = ""
+    ALPHAVANTAGE_API_KEY: str = ""
+    EXCHANGERATE_API_KEY: str = ""
+    WORLD_BANK_API_KEY: str = ""
+    COMMODITY_API_KEY: str = ""
+
+    # API Keys - Humanitarian
+    GDELT_API_KEY: str = ""
+    RELIEFWEB_API_KEY: str = ""
+    ACLED_API_KEY: str = ""
+
+    # API Keys - Digital World
+    CLOUDFLARE_RADAR_API_KEY: str = ""
+
+    # Frontend
+    MAPBOX_TOKEN: str = ""
+
+    # Email
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    EMAIL_FROM: str = "noreply@terrasignal.io"
+
+    # CORS
+    CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:3000"]
+
+    # Rate Limiting
+    RATE_LIMIT_REQUESTS: int = 100
+    RATE_LIMIT_WINDOW: int = 60
+
+    # Data Ingestion
+    INGESTION_INTERVAL_SECONDS: int = 60
+    MAX_CONCURRENT_INGESTIONS: int = 10
+    REQUEST_TIMEOUT_SECONDS: int = 30
+
+    # WebSocket
+    WS_HEARTBEAT_INTERVAL: int = 30
+    WS_MAX_CONNECTIONS: int = 10000
+
+    # Correlation Engine
+    CORRELATION_SPATIAL_RADIUS_KM: float = 150.0
+    CORRELATION_TIME_WINDOW_HOURS: int = 6
+    CORRELATION_MIN_DOMAINS: int = 2
+    SEVERITY_AMPLIFICATION_2_DOMAINS: float = 1.3
+    SEVERITY_AMPLIFICATION_3_DOMAINS: float = 1.7
+    SEVERITY_AMPLIFICATION_4_PLUS_DOMAINS: float = 2.2
+
+    # Anomaly Detection
+    ANOMALY_LOOKBACK_DAYS: int = 7
+    ANOMALY_ZSCORE_THRESHOLD: float = 3.0
+    ANOMALY_MIN_SAMPLES: int = 10
+
+    # Anomaly thresholds
+    ANOMALY_ZSCORE_THRESHOLD_LOW: float = 2.0
+    ANOMALY_ZSCORE_THRESHOLD_HIGH: float = 3.5
+    ANOMALY_MIN_OBSERVATIONS: int = 10
+
+    # Severity thresholds
+    SEVERITY_LOW: float = 0.3
+    SEVERITY_MEDIUM: float = 0.5
+    SEVERITY_HIGH: float = 0.7
+    SEVERITY_CRITICAL: float = 0.85
+
+    # Alert thresholds
+    ALERT_SEVERITY_THRESHOLD: float = 0.7
+    ALERT_COOLDOWN_MINUTES: int = 30
+
+    # Mapbox
+    MAPBOX_TOKEN: str = ""
+
+    # Frontend URL
+    FRONTEND_URL: str = "http://localhost:5173"
+
     class Config:
         env_file = ".env"
+        env_file_encoding = "utf-8"
         case_sensitive = True
+        extra = "ignore"
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
     return Settings()
-
-
-settings = get_settings()

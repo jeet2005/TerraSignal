@@ -1,5 +1,5 @@
 import httpx
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any
 from app.models.event import Event
 from app.core.logging import logger
@@ -7,6 +7,48 @@ from app.core.config import settings
 
 
 OPENSKY_BASE_URL = "https://opensky-network.org/api"
+OPENSKY_TOKEN_URL = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token"
+TOKEN_REFRESH_MARGIN = 30
+
+
+class OpenSkyTokenManager:
+    def __init__(self):
+        self.token: Optional[str] = None
+        self.expires_at: Optional[datetime] = None
+
+    async def get_token(self) -> str:
+        if self.token and self.expires_at and datetime.now() < self.expires_at:
+            return self.token
+        return await self._refresh()
+
+    async def _refresh(self) -> str:
+        if not settings.OPENSKY_CLIENT_ID or not settings.OPENSKY_CLIENT_SECRET:
+            raise ValueError("OpenSky client credentials not configured")
+        
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            resp = await client.post(
+                OPENSKY_TOKEN_URL,
+                data={
+                    "grant_type": "client_credentials",
+                    "client_id": settings.OPENSKY_CLIENT_ID,
+                    "client_secret": settings.OPENSKY_CLIENT_SECRET,
+                },
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            self.token = data["access_token"]
+            expires_in = data.get("expires_in", 1800)
+            self.expires_at = datetime.now() + timedelta(seconds=expires_in - TOKEN_REFRESH_MARGIN)
+            logger.info("opensky_token_refreshed")
+            return self.token
+
+    async def headers(self) -> Dict[str, str]:
+        token = await self.get_token()
+        return {"Authorization": f"Bearer {token}"}
+
+
+token_manager = OpenSkyTokenManager()
 
 
 def calculate_severity(domain: str, **kwargs) -> float:
@@ -37,17 +79,21 @@ async def fetch_opensky_states(
         params["lomin"] = lomin
         params["lamax"] = lamax
         params["lomax"] = lomax
+
+    headers = await token_manager.headers()
     
-    auth = None
-    if settings.OPENSKY_USERNAME and settings.OPENSKY_PASSWORD:
-        auth = (settings.OPENSKY_USERNAME, settings.OPENSKY_PASSWORD)
-    
-    async with httpx.AsyncClient(timeout=30.0, auth=auth) as client:
+    async with httpx.AsyncClient(timeout=30.0, headers=headers) as client:
         try:
             resp = await client.get(url, params=params)
+            if resp.status_code == 401:
+                logger.warning("opensky_token_expired_retrying")
+                headers = await token_manager.headers()
+                async with httpx.AsyncClient(timeout=30.0, headers=headers) as retry_client:
+                    resp = await retry_client.get(url, params=params)
             resp.raise_for_status()
             data = resp.json()
             states = data.get("states", [])
+            logger.info("opensky_states_fetched", count=len(states))
             return states
         except Exception as e:
             logger.error("opensky_fetch_failed", error=str(e))
@@ -58,9 +104,15 @@ async def fetch_opensky_flight(icao24: str) -> Optional[Dict]:
     url = f"{OPENSKY_BASE_URL}/tracks/all"
     params = {"icao24": icao24}
     
-    async with httpx.AsyncClient(timeout=30.0) as client:
+    headers = await token_manager.headers()
+    
+    async with httpx.AsyncClient(timeout=30.0, headers=headers) as client:
         try:
             resp = await client.get(url, params=params)
+            if resp.status_code == 401:
+                headers = await token_manager.headers()
+                async with httpx.AsyncClient(timeout=30.0, headers=headers) as retry_client:
+                    resp = await retry_client.get(url, params=params)
             resp.raise_for_status()
             return resp.json()
         except Exception as e:

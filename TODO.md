@@ -6,17 +6,16 @@
 - [x] Initialize Git repository
 - [x] Create Docker Compose configuration
 - [x] Create .env.example template
-- [x] Set up ESLint/Prettier configuration
+- [x] Set up ESLint/Prettier configuration (frontend)
 
-### Backend (FastAPI)
+### Backend (FastAPI + MongoDB + Beanie)
 - [x] Initialize FastAPI project structure
-- [x] Configure MongoDB connection (Motor/Beanie)
+- [x] Configure MongoDB connection (motor + Beanie)
 - [x] Set up JWT authentication system
 - [x] Create API router structure
-- [x] Implement WebSocket manager
 - [x] Set up APScheduler for background tasks
 - [x] Create base models and schemas
-- [x] Add logging configuration
+- [x] Add logging configuration (structlog)
 - [x] Health check endpoints
 - [x] Authentication endpoints (register, login, refresh, me)
 - [x] Events API endpoints
@@ -24,88 +23,100 @@
 - [x] Push notifications API endpoints
 - [x] Settings API endpoints
 
-### Frontend (React + Vite + TypeScript)
-- [x] Initialize Vite + React + TypeScript project
-- [x] Configure TailwindCSS
-- [x] Set up Zustand store structure
-- [x] Configure TanStack Query
-- [x] Set up Dexie (IndexedDB) for offline
-- [x] Create base UI component library
-- [x] Set up CesiumJS integration
-- [x] Set up MapLibre GL JS integration
-- [x] Configure WebSocket client
-- [x] Create routing structure (React Router)
-- [x] Authentication store (Zustand + persist)
-- [x] Map store (Zustand + persist)
-- [x] UI store (Zustand + persist)
-- [x] API service with axios
-- [x] WebSocket service
-- [x] Type definitions
-- [x] Utility functions (cn, format, etc.)
+### Database Models (MongoDB + Beanie)
+- [x] Base model (UUIDMixin, TimestampMixin)
+- [x] Event models (all 77 event types across 6 domains)
+- [x] Domain models (Environment, Movement, Space Weather, Economics, Humanitarian, Digital)
+- [x] Compound Event model with correlation engine support
+- [x] Anomaly Detection model
+- [x] User/Auth models
+- [x] Health check / monitoring models
+- [x] GeoJSON/Geometry support (MongoDB geospatial indexes)
+- [ ] Create Alembic migrations
 
-### Database (MongoDB Atlas)
-- [x] Design MongoDB collections/schemas
-- [x] Create indexes for geospatial queries
-- [x] Set up connection pooling
+### Frontend (React + Vite + TypeScript)
+- [ ] Initialize Vite + React + TypeScript project
+- [ ] Configure Tailwind CSS
+- [ ] Set up Zustand store structure
+- [ ] Configure TanStack Query
+- [ ] Set up Dexie (IndexedDB) for offline
+- [ ] Create base UI component library
+- [ ] Set up CesiumJS integration (3D globe)
+- [ ] Set up MapLibre GL JS integration (2D fallback)
+- [ ] Configure WebSocket client
+- [ ] Create routing structure (React Router)
+- [ ] Authentication store (Zustand + persist)
+- [ ] Map store (Zustand + persist)
+- [ ] UI store (Zustand + persist)
+- [ ] API service with axios
+- [ ] WebSocket service
+- [ ] Type definitions
+- [ ] Utility functions
 
 ---
 
 ## Phase 2: Core Data Ingestion (31 APIs)
+
 ### Environment & Climate APIs
-- [x] USGS Earthquake API integration
-- [x] Open-Meteo Weather API integration
-- [x] OpenAQ Air Quality API integration
-- [x] NASA FIRMS Fire API integration
-- [x] NIFC Wildfire Perimeters integration
-- [x] GDACS Disaster Alerts integration
-- [x] NOAA Storm Prediction Center integration
-- [x] NOAA Space Weather API integration
+- [ ] USGS Earthquake API integration
+- [ ] Open-Meteo Weather API integration
+- [ ] OpenAQ Air Quality API integration
+- [ ] NASA FIRMS Fire API integration
+- [ ] NIFC Wildfire Perimeters integration
+- [ ] GDACS Disaster Alerts integration
+- [ ] NOAA Storm Prediction Center integration
+- [ ] NOAA Space Weather API integration
 
 ### Movement APIs
 - [x] OpenSky Network Flight API integration
-- [x] AIS Vessel Tracking integration
-- [x] Transitland Public Transit integration
+- [ ] AIS Vessel Tracking integration
+- [ ] Transitland Public Transit integration
 - [x] TomTom Traffic API integration
-- [x] N2YO Satellite Tracking integration
-- [x] Open Notify ISS Position integration
+- [ ] N2YO Satellite Tracking integration
+- [ ] Open Notify ISS Position integration
 
 ### Economics APIs
 - [x] CoinGecko Crypto API integration
 - [x] FRED Economic Data integration
 - [x] Alpha Vantage Market Data integration
-- [x] ExchangeRate-API Currency integration
-- [x] World Bank Open Data integration
-- [x] Commodity Price Feeds integration
+- [ ] ExchangeRate-API Currency integration
+- [ ] World Bank Open Data integration
+- [ ] Commodity Price Feeds integration
 
 ### Humanitarian & Geopolitical APIs
-- [x] GDELT GEO API integration
-- [x] GDELT DOC 2.0 API integration
-- [x] ReliefWeb API integration
-- [x] ACLED Conflict Data integration
+- [ ] GDELT GEO API integration
+- [ ] GDELT DOC 2.0 API integration
+- [ ] ReliefWeb API integration
+- [ ] ACLED Conflict Data integration
 
 ### Digital World APIs
-- [x] Wikimedia EventStreams integration
-- [x] GitHub Events API integration
-- [x] Cloudflare Radar API integration
-- [x] Hacker News API integration
+- [ ] Wikimedia EventStreams integration
+- [ ] GitHub Events API integration
+- [ ] Cloudflare Radar API integration
+- [ ] Hacker News API integration
 
 ### Geocoding
-- [x] Nominatim/OpenStreetMap integration
+- [ ] Nominatim/OpenStreetMap integration
 
-### Data Normalization
-- [x] Universal severity scoring (0-1)
-- [x] Common event schema
-- [x] Geospatial enrichment
-- [x] Time-series storage
+### Data Normalization Pipeline
+- [ ] Universal severity scoring (0-1)
+- [ ] Common event schema transformation
+- [ ] Geospatial enrichment (reverse geocoding)
+- [ ] Time-series storage optimization
+- [ ] Deduplication logic
+- [ ] Data validation & quality checks
 
 ---
 
 ## Phase 3: Intelligence Layer
-- [ ] Statistical Anomaly Detection (Z-score)
+- [ ] Statistical Anomaly Detection (Z-score, 7-day rolling baseline)
 - [ ] Compound Event Correlation Engine
-- [ ] Severity amplification logic
-- [ ] 7-day rolling baselines
-- [ ] Spatial-temporal clustering (150km, 6hr)
+  - [ ] Spatial-temporal clustering (150km, 6hr window)
+  - [ ] Multi-domain detection (min 2 domains)
+  - [ ] Severity amplification logic (2 domains: 1.3x, 3: 1.7x, 4+: 2.2x)
+- [ ] 7-day rolling baselines per metric
+- [ ] Alert threshold management
+- [ ] Background worker orchestration
 
 ---
 
@@ -113,50 +124,58 @@
 - [ ] WebSocket server for live updates
 - [ ] CZML packet generation for Cesium
 - [ ] GeoJSON streaming for MapLibre
-- [ ] Client-side WebSocket reconnection
+- [ ] Client-side WebSocket reconnection logic
 - [ ] Offline-first sync with IndexedDB
+- [ ] Message broadcasting (Redis pub/sub)
 
 ---
 
 ## Phase 5: Pulse Map (Core Globe)
-- [x] CesiumJS 3D Globe component (basic)
-- [ ] MapLibre 2D fallback at city zoom
-- [ ] Domain layer toggles
-- [ ] Event markers (earthquakes, fires, flights, ships, AQI, storms)
+- [ ] CesiumJS 3D Globe component
+- [ ] MapLibre 2D fallback at city zoom (level 8+)
+- [ ] Domain layer toggles (6 domains)
+- [ ] Event markers:
+  - [ ] Earthquakes (pulsing circles, magnitude-sized)
+  - [ ] Wildfires (flame icons, age-fade)
+  - [ ] Flights (moving trails)
+  - [ ] Ships (dots, shipping lanes)
+  - [ ] Air Quality (heatmap over cities)
+  - [ ] Storm/Wildfire polygons
 - [ ] Click → Event Popup with details
-- [ ] 7-day mini-timeline
-- [ ] Live event counters
+- [ ] 7-day mini-timeline in popup
+- [ ] Live event counters per layer
 - [ ] Camera fly-to navigation
 - [ ] Zoom-level adaptive rendering
+- [ ] Voice search integration
 
 ---
 
 ## Phase 6: Module Views
 ### Threat Board
-- [ ] Compound event ranked list
+- [ ] Compound event ranked list (live reordering)
 - [ ] Stat cards (high-severity clusters, events/hr, active domain)
 - [ ] Expandable rows with contributing signals
-- [ ] News headlines integration
+- [ ] News headlines integration (GDELT)
 
 ### City Scope
-- [ ] Weather panel (Open-Meteo)
-- [ ] Transit panel (Transitland)
-- [ ] Air Quality panel (OpenAQ stations)
-- [ ] Wikipedia Pulse panel (Wikimedia EventStreams)
-- [ ] Local News panel (GDELT DOC 2.0)
+- [ ] Weather panel (current + 12hr forecast)
+- [ ] Transit panel (live vehicle positions)
+- [ ] Air Quality panel (station breakdown, WHO thresholds)
+- [ ] Wikipedia Pulse panel (live edit count)
+- [ ] Local News panel (GDELT geocoded)
 
 ### Economic Vitals
-- [ ] Crypto heatmap (CoinGecko)
-- [ ] Currency movement map
-- [ ] Macro indicators sparklines (FRED)
+- [ ] Crypto heatmap (top 50, 24h change)
+- [ ] Currency movement world map
+- [ ] Macro indicators sparklines (6 FRED series)
 - [ ] GDP vs Development scatter (World Bank)
-- [ ] Commodity prices
+- [ ] Commodity prices (30-day trend)
 - [ ] Remittance corridor tracker
 
 ### Digital Heartbeat
-- [ ] Wikipedia edit stream
-- [ ] GitHub activity
-- [ ] Hacker News trends
+- [ ] Wikipedia edit stream (human, non-bot)
+- [ ] GitHub activity (global open-source)
+- [ ] Hacker News trending
 - [ ] Cloudflare Radar internet health
 
 ### Sky & Sea
@@ -178,14 +197,15 @@
 ---
 
 ## Phase 7: UI/UX & Navigation
-- [x] Desktop layout (left nav, globe, side panel, alert feed)
+- [ ] Desktop layout (left nav, globe, side panel, alert feed)
 - [ ] Mobile layout (bottom nav, bottom sheets)
-- [x] Top bar (search, voice, live counter, settings)
-- [x] Module navigation
-- [x] Alert feed / event timeline
-- [ ] Settings panel
-- [x] Dark/Light theme
-- [x] Responsive design
+- [ ] Top bar (search, voice, live counter, settings)
+- [ ] Module navigation
+- [ ] Alert feed / event timeline
+- [ ] Settings panel (alert threshold, layers, units, offline toggle)
+- [ ] Dark/Light theme
+- [ ] Responsive design
+- [ ] PWA manifest + service worker
 
 ---
 
@@ -215,4 +235,11 @@
 - [ ] Docker Compose production config
 - [ ] Environment configuration
 - [ ] CI/CD pipeline
-- [ ] Monitoring setup
+- [ ] Monitoring setup (Prometheus + Grafana)
+
+---
+
+**Current Status: Phase 1 Backend Foundation - COMPLETE | Phase 2 Ingestion - IN PROGRESS**
+- Completed: Project structure, Docker Compose, config, MongoDB/Beanie models, auth, all API endpoints
+- Completed ingestion: OpenSky (flights), CoinGecko (crypto)
+- Next: Remaining 29 API ingestors, Alembic → MongoDB indexes, frontend initialization

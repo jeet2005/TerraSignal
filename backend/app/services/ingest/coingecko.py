@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import List, Dict, Optional
 from app.models.event import Event
 from app.core.logging import logger
+from app.core.config import settings
 
 
 COINGECKO_BASE_URL = "https://api.coingecko.com/api/v3"
@@ -36,7 +37,11 @@ async def fetch_coingecko_markets(vs_currency: str = "usd") -> List[Dict]:
         "price_change_percentage": "24h,7d",
     }
     
-    async with httpx.AsyncClient(timeout=30.0) as client:
+    headers = {}
+    if settings.COINGECKO_API_KEY:
+        headers["x-cg-demo-api-key"] = settings.COINGECKO_API_KEY
+    
+    async with httpx.AsyncClient(timeout=30.0, headers=headers) as client:
         try:
             resp = await client.get(url, params=params)
             resp.raise_for_status()
@@ -49,7 +54,11 @@ async def fetch_coingecko_markets(vs_currency: str = "usd") -> List[Dict]:
 async def fetch_coingecko_global() -> Dict:
     url = f"{COINGECKO_BASE_URL}/global"
     
-    async with httpx.AsyncClient(timeout=30.0) as client:
+    headers = {}
+    if settings.COINGECKO_API_KEY:
+        headers["x-cg-demo-api-key"] = settings.COINGECKO_API_KEY
+    
+    async with httpx.AsyncClient(timeout=30.0, headers=headers) as client:
         try:
             resp = await client.get(url)
             resp.raise_for_status()
@@ -62,7 +71,11 @@ async def fetch_coingecko_global() -> Dict:
 async def fetch_coingecko_trending() -> List[Dict]:
     url = f"{COINGECKO_BASE_URL}/search/trending"
     
-    async with httpx.AsyncClient(timeout=30.0) as client:
+    headers = {}
+    if settings.COINGECKO_API_KEY:
+        headers["x-cg-demo-api-key"] = settings.COINGECKO_API_KEY
+    
+    async with httpx.AsyncClient(timeout=30.0, headers=headers) as client:
         try:
             resp = await client.get(url)
             resp.raise_for_status()
